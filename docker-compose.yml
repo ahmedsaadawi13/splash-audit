@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  database:
+    image: mysql:5.7
+    container_name: splashaudit_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-splash_audit}
+      MYSQL_ROOT_PASSWORD: ${DB_PASS:-root}
+      MYSQL_USER: ${DB_USER:-splash}
+      MYSQL_PASSWORD: ${DB_PASS:-secret}
+    ports:
+      - "${DB_PORT:-3306}:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - splashaudit
+
+  # PHP Application
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: splashaudit_app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8080}:80"
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
+    environment:
+      APP_ENV: ${APP_ENV:-development}
+      APP_DEBUG: ${APP_DEBUG:-true}
+      APP_URL: ${APP_URL:-http://localhost:8080}
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-splash_audit}
+      DB_USER: ${DB_USER:-splash}
+      DB_PASS: ${DB_PASS:-secret}
+    depends_on:
+      - database
+    networks:
+      - splashaudit
+
+  # phpMyAdmin (optional, for development)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: splashaudit_phpmyadmin
+    restart: unless-stopped
+    ports:
+      - "${PMA_PORT:-8081}:80"
+    environment:
+      PMA_HOST: database
+      PMA_PORT: 3306
+      MYSQL_ROOT_PASSWORD: ${DB_PASS:-root}
+    depends_on:
+      - database
+    networks:
+      - splashaudit
+    profiles:
+      - dev
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  splashaudit:
+    driver: bridge

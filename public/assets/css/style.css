@@ -107,6 +107,35 @@ a:hover {
     color: #e74c3c;
 }
 
+.text-success {
+    color: #27ae60;
+}
+
+.text-warning {
+    color: #f39c12;
+}
+
+.text-muted {
+    color: #95a5a6;
+}
+
+/* Spacing Utilities */
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+.ml-10 {
+    margin-left: 10px;
+}
+
+.mr-10 {
+    margin-right: 10px;
+}
+
 /* Alerts */
 .alert {
     padding: 15px;
@@ -357,7 +386,8 @@ a:hover {
 
 /* Sections */
 .recent-section,
-.alerts-section {
+.alerts-section,
+.content-section {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -371,6 +401,25 @@ a:hover {
     margin-bottom: 15px;
     font-size: 18px;
     color: #333;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-header h2 {
+    font-size: 24px;
+    color: #333;
+    margin: 0;
+}
+
+.page-header .btn {
+    margin-left: 10px;
 }
 
 /* Badges */
@@ -419,6 +468,35 @@ a:hover {
 
 .badge-low {
     background-color: #3498db;
+    color: #fff;
+}
+
+.badge-deferred,
+.badge-closed {
+    background-color: #7f8c8d;
+    color: #fff;
+}
+
+.badge-platform_admin {
+    background-color: #9b59b6;
+    color: #fff;
+}
+
+.badge-tenant_admin {
+    background-color: #e67e22;
+    color: #fff;
+}
+
+.badge-audit_manager,
+.badge-internal_auditor {
+    background-color: #3498db;
+    color: #fff;
+}
+
+.badge-process_owner,
+.badge-reviewer,
+.badge-viewer {
+    background-color: #95a5a6;
     color: #fff;
 }
 

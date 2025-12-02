@@ -58,4 +58,32 @@ class Risk extends Model {
 
         return $this->db->fetchOne($sql, [Auth::tenantId()]);
     }
+
+    /**
+     * Calculate and update risk scores after create/update
+     * Since generated columns were removed for MySQL 5.7 compatibility,
+     * we calculate these values in the application layer
+     */
+    public function calculateRiskScores($id) {
+        $risk = $this->findById($id);
+
+        if (!$risk) {
+            return false;
+        }
+
+        // Calculate inherent risk (likelihood × impact)
+        $inherentRisk = ($risk['likelihood'] ?? 0) * ($risk['impact'] ?? 0);
+
+        // Calculate residual risk (inherent risk - control effectiveness)
+        $residualRisk = $inherentRisk - ($risk['control_effectiveness'] ?? 0);
+
+        // Ensure residual risk is never negative
+        $residualRisk = max(0, $residualRisk);
+
+        // Update the risk scores
+        return $this->update($id, [
+            'inherent_risk' => $inherentRisk,
+            'residual_risk' => $residualRisk
+        ]);
+    }
 }

@@ -65,6 +65,10 @@ class RiskController extends Controller {
 
         try {
             $id = $this->riskModel->create($data);
+
+            // Calculate risk scores (inherent_risk and residual_risk)
+            $this->riskModel->calculateRiskScores($id);
+
             $this->logActivity('created', 'risk', $id, 'Created risk: ' . $data['title']);
             $this->setSuccess('Risk added successfully.');
             $this->redirect('/risk');

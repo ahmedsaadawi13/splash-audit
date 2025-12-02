@@ -1,33 +1,12 @@
 <?php
 // FILE: /app/controllers/ApiAuditsController.php
 
-class ApiAuditsController extends Controller {
+class ApiAuditsController extends ApiController {
     private $auditPlanModel;
-    private $tenantId;
 
     public function __construct() {
         parent::__construct();
         $this->auditPlanModel = $this->model('AuditPlan');
-        $this->authenticateAPI();
-    }
-
-    private function authenticateAPI() {
-        $apiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
-
-        if (empty($apiKey)) {
-            $this->json(['error' => 'API key is required'], 401);
-        }
-
-        $result = $this->db->fetchOne(
-            'SELECT tenant_id FROM api_keys WHERE api_key = ? AND is_active = 1',
-            [$apiKey]
-        );
-
-        if (!$result) {
-            $this->json(['error' => 'Invalid API key'], 401);
-        }
-
-        $this->tenantId = $result['tenant_id'];
     }
 
     /**
@@ -59,7 +38,7 @@ class ApiAuditsController extends Controller {
         $this->json([
             'success' => true,
             'audit' => [
-                'id' => $audit['id'],
+                'id' => (int)$audit['id'],
                 'title' => $audit['title'],
                 'status' => $audit['status'],
                 'planned_start' => $audit['planned_start'],

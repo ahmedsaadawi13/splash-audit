@@ -10,6 +10,9 @@ storage/logs/*
 # Vendor directory (if using Composer)
 vendor/
 
+# Composer lock file (uncomment to ignore)
+# composer.lock
+
 # IDE files
 .idea/
 .vscode/

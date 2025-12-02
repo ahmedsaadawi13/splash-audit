@@ -19,6 +19,10 @@ $_ENV['DB_NAME'] = 'splash_audit_test';
 $_ENV['DB_USER'] = 'root';
 $_ENV['DB_PASS'] = '';
 $_ENV['APP_KEY'] = 'test-key-for-phpunit-testing-only';
+$_ENV['APP_URL'] = 'http://localhost';
+
+// Define BASE_PATH for testing (empty for root installation)
+define('BASE_PATH', '');
 
 // Autoloader
 spl_autoload_register(function ($className) {

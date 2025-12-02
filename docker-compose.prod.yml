@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  database:
+    image: mysql:5.7
+    container_name: splashaudit_prod_db
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-splash_audit_prod}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:-CHANGE_THIS_ROOT_PASSWORD}
+      MYSQL_USER: ${DB_USER:-splashuser}
+      MYSQL_PASSWORD: ${DB_PASS:-CHANGE_THIS_PASSWORD}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - splashaudit_prod
+    command: --default-authentication-plugin=mysql_native_password
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: splashaudit_prod_app
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./public/assets/uploads:/var/www/html/public/assets/uploads
+    environment:
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_URL: ${APP_URL:-https://yourdomain.com}
+      APP_KEY: ${APP_KEY}
+      DB_HOST: database
+      DB_PORT: 3306
+      DB_NAME: ${DB_NAME:-splash_audit_prod}
+      DB_USER: ${DB_USER:-splashuser}
+      DB_PASS: ${DB_PASS}
+      MAIL_HOST: ${MAIL_HOST}
+      MAIL_PORT: ${MAIL_PORT:-587}
+      MAIL_USER: ${MAIL_USER}
+      MAIL_PASS: ${MAIL_PASS}
+      MAIL_FROM: ${MAIL_FROM}
+    depends_on:
+      - database
+    networks:
+      - splashaudit_prod
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Optional: Redis for caching (uncomment if needed)
+  # redis:
+  #   image: redis:alpine
+  #   container_name: splashaudit_prod_redis
+  #   restart: always
+  #   ports:
+  #     - "6379:6379"
+  #   networks:
+  #     - splashaudit_prod
+
+volumes:
+  db_data:
+    driver: local
+
+networks:
+  splashaudit_prod:
+    driver: bridge

@@ -70,6 +70,11 @@ define('PUBLIC_PATH', ROOT_PATH . '/public');
 define('STORAGE_PATH', ROOT_PATH . '/storage');
 define('LOGS_PATH', STORAGE_PATH . '/logs');
 
+// Base path for subdirectory installations
+// Extract path from APP_URL (e.g., https://domain.com/audit -> /audit)
+$appUrl = parse_url(APP_URL, PHP_URL_PATH);
+define('BASE_PATH', $appUrl ?: '');
+
 // Error Reporting
 if (APP_ENV === 'development') {
     error_reporting(E_ALL);

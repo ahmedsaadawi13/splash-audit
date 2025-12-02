@@ -32,6 +32,14 @@ class Router {
             $url = substr($url, 0, $pos);
         }
 
+        // Remove base path for subdirectory installations
+        if (defined('BASE_PATH') && !empty(BASE_PATH)) {
+            $basePath = rtrim(BASE_PATH, '/');
+            if (strpos($url, $basePath) === 0) {
+                $url = substr($url, strlen($basePath));
+            }
+        }
+
         // Remove trailing slash
         $url = rtrim($url, '/');
 

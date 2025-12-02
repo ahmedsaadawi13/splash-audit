@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/assets/css/style.css">
 </head>
 <body class="auth-page">
     <div class="auth-container">
@@ -19,7 +19,7 @@
                 </div>
             <?php endif; ?>
 
-            <form action="/auth/process-register" method="POST">
+            <form action="<?php echo BASE_PATH; ?>/auth/process-register" method="POST">
                 <?php echo Session::csrfField(); ?>
 
                 <div class="form-group">
@@ -65,7 +65,7 @@
             </form>
 
             <div class="auth-footer">
-                <p>Already have an account? <a href="/auth/login">Login here</a></p>
+                <p>Already have an account? <a href="<?php echo BASE_PATH; ?>/auth/login">Login here</a></p>
             </div>
         </div>
     </div>

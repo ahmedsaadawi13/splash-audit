@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($page_title ?? 'Dashboard'); ?> - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/assets/css/style.css">
 </head>
 <body>
     <div class="wrapper">
@@ -19,24 +19,24 @@
 
             <nav class="sidebar-nav">
                 <ul>
-                    <li><a href="/dashboard">Dashboard</a></li>
+                    <li><a href="<?php echo BASE_PATH; ?>/dashboard">Dashboard</a></li>
 
                     <?php if (Auth::hasRole(['platform_admin', 'tenant_admin', 'audit_manager'])): ?>
-                        <li><a href="/user">Users</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/user">Users</a></li>
                     <?php endif; ?>
 
                     <?php if (!Auth::isPlatformAdmin()): ?>
-                        <li><a href="/audit/universe">Audit Universe</a></li>
-                        <li><a href="/audit/programs">Audit Programs</a></li>
-                        <li><a href="/audit/plans">Audit Plans</a></li>
-                        <li><a href="/risk">Risk Register</a></li>
-                        <li><a href="/risk/heatmap">Risk Heatmap</a></li>
-                        <li><a href="/finding">Findings</a></li>
-                        <li><a href="/corrective-action">Corrective Actions</a></li>
-                        <li><a href="/report">Reports</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/audit/universe">Audit Universe</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/audit/programs">Audit Programs</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/audit/plans">Audit Plans</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/risk">Risk Register</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/risk/heatmap">Risk Heatmap</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/finding">Findings</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/corrective-action">Corrective Actions</a></li>
+                        <li><a href="<?php echo BASE_PATH; ?>/report">Reports</a></li>
                     <?php endif; ?>
 
-                    <li><a href="/auth/logout">Logout</a></li>
+                    <li><a href="<?php echo BASE_PATH; ?>/auth/logout">Logout</a></li>
                 </ul>
             </nav>
         </aside>
@@ -67,6 +67,6 @@
         </div>
     </div>
 
-    <script src="/assets/js/app.js"></script>
+    <script src="<?php echo BASE_PATH; ?>/assets/js/app.js"></script>
 </body>
 </html>

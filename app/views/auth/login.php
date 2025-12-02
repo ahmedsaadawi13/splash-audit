@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - <?php echo APP_NAME; ?></title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="<?php echo BASE_PATH; ?>/assets/css/style.css">
 </head>
 <body class="auth-page">
     <div class="auth-container">
@@ -25,7 +25,7 @@
                 </div>
             <?php endif; ?>
 
-            <form action="/auth/authenticate" method="POST">
+            <form action="<?php echo BASE_PATH; ?>/auth/authenticate" method="POST">
                 <?php echo Session::csrfField(); ?>
 
                 <div class="form-group">
@@ -42,7 +42,7 @@
             </form>
 
             <div class="auth-footer">
-                <p>Don't have an account? <a href="/auth/register">Register here</a></p>
+                <p>Don't have an account? <a href="<?php echo BASE_PATH; ?>/auth/register">Register here</a></p>
             </div>
         </div>
     </div>

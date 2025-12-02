@@ -75,16 +75,24 @@ class Router {
             if (file_exists($controllerFile)) {
                 $this->controller = $controllerName;
                 unset($url[0]);
-            }
 
-            require_once APP_PATH . '/controllers/' . $this->controller . '.php';
-            $this->controller = new $this->controller;
+                require_once $controllerFile;
+                $this->controller = new $this->controller;
+            } else {
+                // Controller not found - show 404
+                $this->show404();
+                return;
+            }
 
             // Method
             if (isset($url[1])) {
                 if (method_exists($this->controller, $url[1])) {
                     $this->method = $url[1];
                     unset($url[1]);
+                } else {
+                    // Method not found - show 404
+                    $this->show404();
+                    return;
                 }
             }
 
@@ -92,7 +100,12 @@ class Router {
             $this->params = $url ? array_values($url) : [];
 
             // Call controller method with parameters
-            call_user_func_array([$this->controller, $this->method], $this->params);
+            try {
+                call_user_func_array([$this->controller, $this->method], $this->params);
+            } catch (Exception $e) {
+                error_log('Router dispatch error: ' . $e->getMessage());
+                $this->show500($e);
+            }
         }
     }
 
@@ -122,5 +135,73 @@ class Router {
             http_response_code(404);
             echo json_encode(['error' => 'API endpoint not found']);
         }
+    }
+
+    /**
+     * Show 404 error page
+     */
+    private function show404() {
+        http_response_code(404);
+        $errorFile = APP_PATH . '/views/errors/404.php';
+
+        if (file_exists($errorFile)) {
+            // Load layout with 404 error page
+            $content = file_get_contents($errorFile);
+            $layoutFile = APP_PATH . '/views/layouts/main.php';
+
+            if (file_exists($layoutFile)) {
+                include $layoutFile;
+            } else {
+                echo $content;
+            }
+        } else {
+            // Fallback error message if no error page exists
+            echo '<html><head><title>404 Not Found</title></head><body>';
+            echo '<h1>404 - Page Not Found</h1>';
+            echo '<p>The page you requested could not be found.</p>';
+            echo '<a href="/">Go to Dashboard</a>';
+            echo '</body></html>';
+        }
+        exit;
+    }
+
+    /**
+     * Show 500 error page
+     */
+    private function show500($exception = null) {
+        http_response_code(500);
+        $errorFile = APP_PATH . '/views/errors/500.php';
+
+        // Log the error
+        if ($exception) {
+            error_log('500 Error: ' . $exception->getMessage() . ' in ' . $exception->getFile() . ':' . $exception->getLine());
+        }
+
+        if (file_exists($errorFile)) {
+            // Load layout with 500 error page
+            $content = file_get_contents($errorFile);
+            $layoutFile = APP_PATH . '/views/layouts/main.php';
+
+            if (file_exists($layoutFile)) {
+                include $layoutFile;
+            } else {
+                echo $content;
+            }
+        } else {
+            // Fallback error message if no error page exists
+            echo '<html><head><title>500 Internal Server Error</title></head><body>';
+            echo '<h1>500 - Internal Server Error</h1>';
+            echo '<p>An error occurred while processing your request.</p>';
+
+            // Show details in development mode
+            if (defined('APP_ENV') && APP_ENV !== 'production' && $exception) {
+                echo '<pre>' . $exception->getMessage() . '</pre>';
+                echo '<pre>' . $exception->getTraceAsString() . '</pre>';
+            }
+
+            echo '<a href="/">Go to Dashboard</a>';
+            echo '</body></html>';
+        }
+        exit;
     }
 }

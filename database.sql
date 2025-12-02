@@ -515,6 +515,21 @@ CREATE TABLE IF NOT EXISTS `activity_logs` (
   FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- Rate Limits (Security)
+CREATE TABLE IF NOT EXISTS `rate_limits` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `rate_key` VARCHAR(255) NOT NULL COMMENT 'IP address, user ID, or API key',
+  `action` VARCHAR(100) NOT NULL DEFAULT 'default' COMMENT 'Action being rate limited',
+  `attempts` INT UNSIGNED NOT NULL DEFAULT 0,
+  `expires_at` DATETIME NOT NULL,
+  `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_rate_limit` (`rate_key`, `action`),
+  KEY `idx_expires` (`expires_at`),
+  KEY `idx_key_action` (`rate_key`, `action`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- ============================================
 -- INITIAL DATA
 -- ============================================
@@ -544,3 +559,22 @@ VALUES (2, 'admin@demo.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2
 -- Demo API Key for tenant 2
 INSERT INTO `api_keys` (`tenant_id`, `api_key`, `name`, `is_active`)
 VALUES (2, 'demo_api_key_1234567890abcdef1234567890abcdef12345678', 'Demo API Key', 1);
+
+-- ============================================
+-- PERFORMANCE OPTIMIZATION INDEXES
+-- ============================================
+
+-- Additional indexes for better query performance
+CREATE INDEX idx_findings_created_at ON findings(created_at DESC);
+CREATE INDEX idx_corrective_actions_created_at ON corrective_actions(created_at DESC);
+CREATE INDEX idx_users_last_login ON users(last_login_at DESC);
+CREATE INDEX idx_activity_logs_created_at ON activity_logs(created_at DESC);
+CREATE INDEX idx_audit_plans_dates ON audit_plans(planned_start, planned_end);
+CREATE INDEX idx_corrective_actions_due_date ON corrective_actions(due_date);
+CREATE INDEX idx_findings_severity_status ON findings(severity, status);
+CREATE INDEX idx_risks_status ON risks(status, inherent_risk DESC);
+
+-- Composite indexes for common queries
+CREATE INDEX idx_findings_audit_severity ON findings(audit_plan_id, severity);
+CREATE INDEX idx_corrective_actions_status_due ON corrective_actions(status, due_date);
+CREATE INDEX idx_risks_category_status ON risks(category, status);

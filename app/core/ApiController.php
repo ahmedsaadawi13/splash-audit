@@ -20,6 +20,20 @@ class ApiController extends Controller {
             $this->json(['error' => 'API key is required'], 401);
         }
 
+        // Rate limiting: 60 requests per minute per API key
+        $rateLimiter = new RateLimiter(60, 1);
+
+        try {
+            $rateLimiter->enforce($apiKey, 'api');
+        } catch (Exception $e) {
+            $remaining = $rateLimiter->getRemainingTime($apiKey, 'api');
+            $this->json([
+                'error' => 'Rate limit exceeded',
+                'message' => $e->getMessage(),
+                'retry_after' => $remaining
+            ], 429);
+        }
+
         // Validate API key
         $result = $this->db->fetchOne(
             'SELECT tenant_id, is_active FROM api_keys WHERE api_key = ?',

@@ -1,9 +1,9 @@
 <div class="page-header">
     <h2>Add Risk</h2>
-    <a href="/risk" class="btn">← Back</a>
+    <a href="<?php echo BASE_PATH; ?>/risk" class="btn">← Back</a>
 </div>
 <div class="content-section">
-    <form action="/risk/store" method="POST" class="form">
+    <form action="<?php echo BASE_PATH; ?>/risk/store" method="POST" class="form">
         <?php echo Session::csrfField(); ?>
         <div class="form-group">
             <label for="title">Risk Title *</label>
@@ -38,7 +38,7 @@
         </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Add Risk</button>
-            <a href="/risk" class="btn">Cancel</a>
+            <a href="<?php echo BASE_PATH; ?>/risk" class="btn">Cancel</a>
         </div>
     </form>
 </div>

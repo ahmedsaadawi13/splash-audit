@@ -1,9 +1,9 @@
 <div class="page-header">
     <h2>Create Corrective Action</h2>
-    <a href="/corrective-action" class="btn">← Back</a>
+    <a href="<?php echo BASE_PATH; ?>/corrective-action" class="btn">← Back</a>
 </div>
 <div class="content-section">
-    <form action="/corrective-action/store" method="POST" enctype="multipart/form-data" class="form">
+    <form action="<?php echo BASE_PATH; ?>/corrective-action/store" method="POST" enctype="multipart/form-data" class="form">
         <?php echo Session::csrfField(); ?>
         <div class="form-group">
             <label for="finding_id">Finding *</label>
@@ -40,7 +40,7 @@
         </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Create Action</button>
-            <a href="/corrective-action" class="btn">Cancel</a>
+            <a href="<?php echo BASE_PATH; ?>/corrective-action" class="btn">Cancel</a>
         </div>
     </form>
 </div>

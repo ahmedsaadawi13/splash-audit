@@ -1,6 +1,6 @@
 <div class="page-header">
     <h2>Corrective Actions</h2>
-    <a href="/corrective-action/create" class="btn btn-primary">+ Create Action</a>
+    <a href="<?php echo BASE_PATH; ?>/corrective-action/create" class="btn btn-primary">+ Create Action</a>
 </div>
 <?php if (!empty($statistics)): ?>
 <div class="stats-grid" style="margin-bottom: 20px;">
@@ -22,7 +22,7 @@
                     <td><?php echo $action['due_date']; ?></td>
                     <td><span class="badge badge-<?php echo $action['status']; ?>"><?php echo ucfirst(str_replace('_', ' ', $action['status'])); ?></span></td>
                     <td>
-                        <form action="/corrective-action/updateStatus/<?php echo $action['id']; ?>" method="POST" style="display: inline;">
+                        <form action="<?php echo BASE_PATH; ?>/corrective-action/updateStatus/<?php echo $action['id']; ?>" method="POST" style="display: inline;">
                             <?php echo Session::csrfField(); ?>
                             <select name="status" onchange="this.form.submit()" style="padding: 5px;">
                                 <option value="open" <?php echo $action['status'] === 'open' ? 'selected' : ''; ?>>Open</option>

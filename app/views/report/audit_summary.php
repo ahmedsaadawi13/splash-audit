@@ -1,7 +1,7 @@
 <div class="page-header">
     <h2>Audit Summary Report</h2>
-    <a href="/report" class="btn">← Back to Reports</a>
-    <a href="/report/audit-summary?export=csv" class="btn btn-primary">📥 Export CSV</a>
+    <a href="<?php echo BASE_PATH; ?>/report" class="btn">← Back to Reports</a>
+    <a href="<?php echo BASE_PATH; ?>/report/audit-summary?export=csv" class="btn btn-primary">📥 Export CSV</a>
 </div>
 <div class="content-section">
     <table class="data-table">

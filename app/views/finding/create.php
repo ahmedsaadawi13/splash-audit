@@ -1,9 +1,9 @@
 <div class="page-header">
     <h2>Create Finding</h2>
-    <a href="/finding" class="btn">← Back</a>
+    <a href="<?php echo BASE_PATH; ?>/finding" class="btn">← Back</a>
 </div>
 <div class="content-section">
-    <form action="/finding/store" method="POST" class="form">
+    <form action="<?php echo BASE_PATH; ?>/finding/store" method="POST" class="form">
         <?php echo Session::csrfField(); ?>
         <div class="form-group">
             <label for="audit_plan_id">Audit Plan *</label>
@@ -50,7 +50,7 @@
         </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Create Finding</button>
-            <a href="/finding" class="btn">Cancel</a>
+            <a href="<?php echo BASE_PATH; ?>/finding" class="btn">Cancel</a>
         </div>
     </form>
 </div>

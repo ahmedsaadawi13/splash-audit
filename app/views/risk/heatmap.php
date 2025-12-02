@@ -1,6 +1,6 @@
 <div class="page-header">
     <h2>Risk Heatmap</h2>
-    <a href="/risk" class="btn">← Back to Risk Register</a>
+    <a href="<?php echo BASE_PATH; ?>/risk" class="btn">← Back to Risk Register</a>
 </div>
 <div class="content-section">
     <div style="margin: 30px auto; max-width: 600px;">

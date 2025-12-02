@@ -32,12 +32,15 @@ nano .env
 # Update these values:
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://yourdomain.com/audit
+APP_URL=https://yourdomain.com/audit  # IMPORTANT: Include /audit in the URL!
 
 DB_HOST=localhost
 DB_NAME=splash_audit_prod
 DB_USER=splashuser
 DB_PASS=your-strong-password-here
+
+# CRITICAL: The APP_URL must include the /audit subdirectory path
+# This allows the application to generate correct URLs for assets and links
 
 ### Step 6: Generate APP_KEY
 php -r "echo 'APP_KEY=' . bin2hex(random_bytes(32)) . PHP_EOL;"

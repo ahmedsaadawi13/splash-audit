@@ -1,9 +1,9 @@
 <div class="page-header">
     <h2>Create Audit Plan</h2>
-    <a href="/audit/plans" class="btn">← Back</a>
+    <a href="<?php echo BASE_PATH; ?>/audit/plans" class="btn">← Back</a>
 </div>
 <div class="content-section">
-    <form action="/audit/storePlan" method="POST" class="form">
+    <form action="<?php echo BASE_PATH; ?>/audit/storePlan" method="POST" class="form">
         <?php echo Session::csrfField(); ?>
         <div class="form-group">
             <label for="title">Audit Title *</label>
@@ -43,7 +43,7 @@
         </div>
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">Create Audit Plan</button>
-            <a href="/audit/plans" class="btn">Cancel</a>
+            <a href="<?php echo BASE_PATH; ?>/audit/plans" class="btn">Cancel</a>
         </div>
     </form>
 </div>

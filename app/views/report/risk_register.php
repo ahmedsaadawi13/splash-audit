@@ -1,7 +1,7 @@
 <div class="page-header">
     <h2>Risk Register Report</h2>
-    <a href="/report" class="btn">← Back to Reports</a>
-    <a href="/report/risk-register?export=csv" class="btn btn-primary">📥 Export CSV</a>
+    <a href="<?php echo BASE_PATH; ?>/report" class="btn">← Back to Reports</a>
+    <a href="<?php echo BASE_PATH; ?>/report/risk-register?export=csv" class="btn btn-primary">📥 Export CSV</a>
 </div>
 <?php if (!empty($statistics)): ?>
 <div class="stats-grid" style="margin-bottom: 20px;">

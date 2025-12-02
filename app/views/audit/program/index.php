@@ -1,6 +1,6 @@
 <div class="page-header">
     <h2>Audit Programs</h2>
-    <a href="/audit/program/create" class="btn btn-primary">+ Create Program</a>
+    <a href="<?php echo BASE_PATH; ?>/audit/program/create" class="btn btn-primary">+ Create Program</a>
 </div>
 <div class="content-section">
     <table class="data-table">
@@ -15,7 +15,7 @@
                     <td><?php echo $program['start_date'] ?? 'N/A'; ?></td>
                     <td><?php echo $program['end_date'] ?? 'N/A'; ?></td>
                     <td><span class="badge badge-<?php echo $program['status']; ?>"><?php echo $program['status']; ?></span></td>
-                    <td><a href="/audit/program/view/<?php echo $program['id']; ?>" class="btn btn-sm">View</a></td>
+                    <td><a href="<?php echo BASE_PATH; ?>/audit/program/view/<?php echo $program['id']; ?>" class="btn btn-sm">View</a></td>
                 </tr>
             <?php endforeach; else: ?>
                 <tr><td colspan="6">No programs found.</td></tr>

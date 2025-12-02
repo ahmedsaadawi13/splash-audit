@@ -1,6 +1,6 @@
 <div class="page-header">
     <h2><?php echo htmlspecialchars($plan['title']); ?></h2>
-    <a href="/audit/plans" class="btn">← Back to Plans</a>
+    <a href="<?php echo BASE_PATH; ?>/audit/plans" class="btn">← Back to Plans</a>
 </div>
 <div class="content-section">
     <div class="details-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
@@ -26,7 +26,7 @@
                     <td><span class="badge badge-<?php echo $finding['severity']; ?>"><?php echo ucfirst($finding['severity']); ?></span></td>
                     <td><?php echo ucfirst(str_replace('_', ' ', $finding['status'])); ?></td>
                     <td><?php echo date('Y-m-d', strtotime($finding['created_at'])); ?></td>
-                    <td><a href="/finding/view/<?php echo $finding['id']; ?>" class="btn btn-sm">View</a></td>
+                    <td><a href="<?php echo BASE_PATH; ?>/finding/view/<?php echo $finding['id']; ?>" class="btn btn-sm">View</a></td>
                 </tr>
             <?php endforeach; else: ?>
                 <tr><td colspan="5">No findings yet.</td></tr>

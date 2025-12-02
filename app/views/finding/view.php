@@ -1,6 +1,6 @@
 <div class="page-header">
     <h2><?php echo htmlspecialchars($finding['title']); ?></h2>
-    <a href="/finding" class="btn">← Back to Findings</a>
+    <a href="<?php echo BASE_PATH; ?>/finding" class="btn">← Back to Findings</a>
 </div>
 <div class="content-section">
     <div class="details-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
@@ -27,7 +27,7 @@
                     <td><?php echo htmlspecialchars(substr($action['action_description'], 0, 100)); ?>...</td>
                     <td><?php echo $action['due_date']; ?></td>
                     <td><span class="badge badge-<?php echo $action['status']; ?>"><?php echo ucfirst(str_replace('_', ' ', $action['status'])); ?></span></td>
-                    <td><a href="/corrective-action/view/<?php echo $action['id']; ?>" class="btn btn-sm">View</a></td>
+                    <td><a href="<?php echo BASE_PATH; ?>/corrective-action/view/<?php echo $action['id']; ?>" class="btn btn-sm">View</a></td>
                 </tr>
             <?php endforeach; else: ?>
                 <tr><td colspan="4">No corrective actions yet.</td></tr>

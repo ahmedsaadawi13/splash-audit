@@ -1,6 +1,6 @@
 <div class="page-header">
     <h2>Findings</h2>
-    <a href="/finding/create" class="btn btn-primary">+ Create Finding</a>
+    <a href="<?php echo BASE_PATH; ?>/finding/create" class="btn btn-primary">+ Create Finding</a>
 </div>
 <?php if (!empty($statistics)): ?>
 <div class="stats-grid" style="margin-bottom: 20px;">
@@ -22,7 +22,7 @@
                     <td><span class="badge badge-<?php echo $finding['severity']; ?>"><?php echo ucfirst($finding['severity']); ?></span></td>
                     <td><?php echo ucfirst(str_replace('_', ' ', $finding['status'])); ?></td>
                     <td><?php echo date('Y-m-d', strtotime($finding['created_at'])); ?></td>
-                    <td><a href="/finding/view/<?php echo $finding['id']; ?>" class="btn btn-sm">View</a></td>
+                    <td><a href="<?php echo BASE_PATH; ?>/finding/view/<?php echo $finding['id']; ?>" class="btn btn-sm">View</a></td>
                 </tr>
             <?php endforeach; else: ?>
                 <tr><td colspan="5">No findings found.</td></tr>

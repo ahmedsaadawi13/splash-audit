@@ -1,45 +1,12 @@
 <?php
 // FILE: /app/controllers/ApiFindingsController.php
 
-class ApiFindingsController extends Controller {
+class ApiFindingsController extends ApiController {
     private $findingModel;
-    private $tenantId;
 
     public function __construct() {
         parent::__construct();
         $this->findingModel = $this->model('Finding');
-
-        // Authenticate API request
-        $this->authenticateAPI();
-    }
-
-    /**
-     * Authenticate API key
-     */
-    private function authenticateAPI() {
-        $apiKey = $_SERVER['HTTP_X_API_KEY'] ?? '';
-
-        if (empty($apiKey)) {
-            $this->json(['error' => 'API key is required'], 401);
-        }
-
-        // Validate API key
-        $result = $this->db->fetchOne(
-            'SELECT tenant_id FROM api_keys WHERE api_key = ? AND is_active = 1',
-            [$apiKey]
-        );
-
-        if (!$result) {
-            $this->json(['error' => 'Invalid API key'], 401);
-        }
-
-        $this->tenantId = $result['tenant_id'];
-
-        // Update last used
-        $this->db->query(
-            'UPDATE api_keys SET last_used_at = NOW() WHERE api_key = ?',
-            [$apiKey]
-        );
     }
 
     /**
@@ -51,14 +18,22 @@ class ApiFindingsController extends Controller {
             $this->json(['error' => 'Method not allowed'], 405);
         }
 
-        $input = json_decode(file_get_contents('php://input'), true);
+        $input = $this->getJsonInput();
+
+        // Validate required fields
+        $this->validateRequired($input, ['audit_plan_id', 'title', 'description']);
+
+        $severity = $input['severity'] ?? 'medium';
+        if (!in_array($severity, ['high', 'medium', 'low'])) {
+            $this->json(['error' => 'Invalid severity. Must be: high, medium, or low'], 400);
+        }
 
         $data = [
             'tenant_id' => $this->tenantId,
-            'audit_plan_id' => $input['audit_plan_id'] ?? null,
-            'title' => $input['title'] ?? '',
-            'description' => $input['description'] ?? '',
-            'severity' => $input['severity'] ?? 'medium',
+            'audit_plan_id' => $input['audit_plan_id'],
+            'title' => $input['title'],
+            'description' => $input['description'],
+            'severity' => $severity,
             'cause' => $input['cause'] ?? '',
             'effect' => $input['effect'] ?? '',
             'criteria' => $input['criteria'] ?? '',
@@ -66,21 +41,12 @@ class ApiFindingsController extends Controller {
             'status' => 'open'
         ];
 
-        // Validate
-        if (empty($data['audit_plan_id']) || empty($data['title']) || empty($data['description'])) {
-            $this->json(['error' => 'Missing required fields: audit_plan_id, title, description'], 400);
-        }
-
-        if (!in_array($data['severity'], ['high', 'medium', 'low'])) {
-            $this->json(['error' => 'Invalid severity. Must be: high, medium, or low'], 400);
-        }
-
         try {
             $findingId = $this->findingModel->create($data);
 
             $this->json([
                 'success' => true,
-                'finding_id' => $findingId,
+                'finding_id' => (int)$findingId,
                 'message' => 'Finding created successfully'
             ], 201);
 
@@ -96,9 +62,20 @@ class ApiFindingsController extends Controller {
      */
     public function list() {
         $status = $this->get('status', 'open');
+        $limit = (int)$this->get('limit', 100);
+        $offset = (int)$this->get('offset', 0);
 
-        $sql = "SELECT * FROM findings WHERE tenant_id = ? AND status = ? ORDER BY created_at DESC";
-        $findings = $this->db->fetchAll($sql, [$this->tenantId, $status]);
+        // Validate status
+        $validStatuses = ['open', 'in_progress', 'closed', 'deferred'];
+        if (!in_array($status, $validStatuses)) {
+            $this->json(['error' => 'Invalid status. Must be: ' . implode(', ', $validStatuses)], 400);
+        }
+
+        $sql = "SELECT * FROM findings
+                WHERE tenant_id = ? AND status = ?
+                ORDER BY created_at DESC
+                LIMIT ? OFFSET ?";
+        $findings = $this->db->fetchAll($sql, [$this->tenantId, $status, $limit, $offset]);
 
         $this->json([
             'success' => true,

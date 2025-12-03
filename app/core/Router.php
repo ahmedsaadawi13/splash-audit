@@ -63,12 +63,31 @@ class Router {
         if (empty($url[0])) {
             // Redirect to dashboard if authenticated, otherwise to login
             if (Auth::check()) {
-                $this->controller = 'DashboardController';
+                $controllerName = 'DashboardController';
                 $this->method = 'index';
             } else {
-                $this->controller = 'AuthController';
+                $controllerName = 'AuthController';
                 $this->method = 'login';
             }
+
+            // Load and instantiate controller
+            $controllerFile = APP_PATH . '/controllers/' . $controllerName . '.php';
+            if (file_exists($controllerFile)) {
+                require_once $controllerFile;
+                $this->controller = new $controllerName;
+            } else {
+                $this->show404();
+                return;
+            }
+
+            // Call method
+            try {
+                call_user_func_array([$this->controller, $this->method], []);
+            } catch (Exception $e) {
+                error_log('Router dispatch error: ' . $e->getMessage());
+                $this->show500($e);
+            }
+            return;
         } else {
             // Check for API routes
             if ($url[0] === 'api') {
